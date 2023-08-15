@@ -21,6 +21,7 @@ Discover a world of movies with MovieNest, where you can explore an extensive mo
 2. Navigate to the project directory: `cd movienest`
 3. Install dependencies: `npm install`
 4. Create a `.env.local` file in the root directory and add your OMDB API key as `REACT_APP_OMDB_API_KEY=your-api-key`
+5. Example: ```REACT_APP_OMDB_API_KEY= 12345 ```
 
 ## Usage
 
