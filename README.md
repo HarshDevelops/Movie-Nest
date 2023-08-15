@@ -4,9 +4,12 @@ Welcome to MovieNest, your ultimate movie companion!
 
 Discover a world of movies with MovieNest, where you can explore an extensive movie database, get personalized recommendations, and connect with fellow film enthusiasts.
 
-## Features
+## Current Features
 
 - Search for Movies: Use the search bar to find information about your favorite movies.
+
+## Upcoming Features
+
 - Personalized Recommendations: Receive movie recommendations based on your unique taste.
 - Engage in Discussions: Join a community of film enthusiasts to leave reviews and engage in discussions.
 - Build Watchlists: Create watchlists to keep track of movies you want to watch.
@@ -14,7 +17,7 @@ Discover a world of movies with MovieNest, where you can explore an extensive mo
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/your-username/movienest.git`
+1. Clone the repository: `git clone https://github.com/HarshDevelops/Movie-Nest.git`
 2. Navigate to the project directory: `cd movienest`
 3. Install dependencies: `npm install`
 4. Create a `.env.local` file in the root directory and add your OMDB API key as `REACT_APP_OMDB_API_KEY=your-api-key`
