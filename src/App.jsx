@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Typography, AppBar, CssBaseline, Toolbar, TextField, Button, CardContent, CardMedia, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Typography, AppBar, CssBaseline, Toolbar, TextField, Button, CardContent, CardMedia, Card, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import SearchIcon from '@mui/icons-material/Search';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
 
 const theme = createTheme({
   palette: {
@@ -16,6 +18,8 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [movieData, setMovieData] = useState(null);
   const [emptyInputError, setEmptyInputError] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [collection, setCollection] = useState([]);
 
   const clickedSearch = async () => {
     if (searchTerm.trim() === '') {
@@ -25,7 +29,6 @@ const App = () => {
 
     try {
       const apiKey = process.env.REACT_APP_OMDB_API_KEY;
-      console.log('API Key:', apiKey);
       // Access the environment variable
       const response = await fetch(`http://www.omdbapi.com/?apikey=${apiKey}&t=${searchTerm}`);
       const data = await response.json();
@@ -39,20 +42,26 @@ const App = () => {
     setEmptyInputError(false);
   };
 
+  const handleAddToCollection = () => {
+    if (!collection.some(movie => movie.Title === movieData.Title)) {
+      setCollection([...collection, movieData]);
+    }
+  };
+
   return (
     <div style={{ backgroundColor: '#1a202c', minHeight: '100vh', color: '#d2d8e0' }}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        {/* ----APPBAR STARTS---- */}
         <AppBar position="relative">
           <Toolbar>
             <LiveTvIcon />
+            <Typography variant="h6" align="right" style={{ flex: 1 , color: 'red'}}>
+              <u><Button onClick={() => setDrawerOpen(true)} style={{color:'black', fontWeight:'bold'}}>Collection</Button></u>
+            </Typography>
           </Toolbar>
         </AppBar>
-        {/* ----APPBAR ENDS---- */}
 
-        {/* Title and the description about the page starts here */}
         <Typography variant="h3" align='center'> <u>Welcome To MovieNest!</u> </Typography>
         <div style={{ textAlign: 'center', margin: '5%' }}>
           <b>
@@ -61,9 +70,7 @@ const App = () => {
             </Typography>
           </b>
         </div>
-        {/* Title and the description about the page ends here */}
 
-        {/* Search Bar Starts Here */}
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '10%', fontWeight: 'bold' }}>
           <TextField
             id="standard-basic"
@@ -84,29 +91,60 @@ const App = () => {
           </Button>
         </div>
 
-        {/* Display Movie Data */}
         {movieData && (
           <Card sx={{ maxWidth: 345, margin: '0 auto' }}>
-            <CardMedia
-              component="img"
-              height="194"
-              image={movieData.Poster}
-              alt="Movie Poster"
-            />
-            <CardContent>
-              <Typography variant="h4" align="center">
-                {movieData.Title}
-              </Typography>
-              <Typography variant="body1" align="center">
-                {movieData.Plot}
-              </Typography>
-            </CardContent>
-          </Card>
+          <CardMedia
+            component="img"
+            height="194"
+            image={movieData.Poster}
+            alt="Movie Poster"
+          />
+          <CardContent>
+            <Typography variant="h4" align="center">
+              {movieData.Title}
+            </Typography>
+            <Typography variant="body1" align="center">
+              {movieData.Plot}
+            </Typography>
+            <Button
+              variant="outlined"
+              onClick={handleAddToCollection}
+              style={{ marginTop: '10px', color: '#2196F3', borderColor: '#2196F3' }}
+              align="center"
+            >
+              Add To Collection
+            </Button>
+          </CardContent>
+        </Card>
         )}
 
-        {/* Search Bar Ends Here */}
+        <Drawer
+          anchor="bottom"
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+        >
+          <Box role="presentation">
+            <List>
+              <ListItem key="CollectionHeading" disablePadding>
+                <ListItemText>
+                  <Typography variant="h6" align="center">
+                   <u> My Collection</u>
+                  </Typography>
+                  {collection.map((movie) => (
+                      <>
+                    <Typography variant="p" align="left" key={movie.imdbID}>
+                      {movie.Title} - {movie.Genre}
+                    </Typography>
+                    <br />
+                    </>
+                  ))}
+                </ListItemText>
+              </ListItem>
+            </List>
+            <Divider />
+          </Box>
+        </Drawer>
 
-        {/* Empty Input Error Dialog */}
         <Dialog
           open={emptyInputError}
           onClose={handleCloseErrorPopup}
@@ -125,8 +163,7 @@ const App = () => {
             </Button>
           </DialogActions>
         </Dialog>
-        
-        </ThemeProvider>
+      </ThemeProvider>
     </div>
   );
 };
